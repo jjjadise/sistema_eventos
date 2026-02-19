@@ -15,11 +15,11 @@ return new class extends Migration
         $table->id();
         $table->string('title');
         $table->text('description');
-        $table->string('location');
+        $table->string('location')->index();
         $table->dateTime('event_date');
-        $table->enum('status', ['pendente', 'aprovado', 'rejeitado'])->default('pendente');
+        $table->enum('status', ['pendente', 'aprovado', 'rejeitado'])->index();
         $table->text('rejection_reason')->nullable();
-        $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
         $table->timestamps();
         });
     }

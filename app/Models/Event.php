@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Event extends Model
 {
@@ -14,6 +15,7 @@ class Event extends Model
         'status',
         'rejection_reason',
         'user_id',
+        'category_id',
     ];
 
     protected static function booted()
@@ -21,5 +23,10 @@ class Event extends Model
         static::creating(function ($event) {
             $event->status = 'pendente';
         });
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 }

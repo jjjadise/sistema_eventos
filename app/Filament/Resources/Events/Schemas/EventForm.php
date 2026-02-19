@@ -7,6 +7,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use App\Models\Category;
 
 class EventForm
 {
@@ -14,6 +15,14 @@ class EventForm
     {
         return $schema
             ->components([
+
+                Select::make('category_id')
+                    ->label('Categoria')
+                    ->relationship('category', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+
                 TextInput::make('title')
                     ->label('Título')
                     ->required()
@@ -38,10 +47,10 @@ class EventForm
                         'pendente' => 'Pendente',
                         'aprovado' => 'Aprovado',
                         'rejeitado' => 'Rejeitado',
-                    ]) 
-                  ->disabled()
-                  ->dehydrated()
-                  ->default('pendente'),
+                    ])
+                    ->disabled()
+                    ->dehydrated()
+                    ->default('pendente'),
 
                 Textarea::make('rejection_reason')
                     ->label('Motivo da Rejeição')

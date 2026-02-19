@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class EventSubmissionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function create()
     {
         return view('events.submit');
@@ -26,9 +31,10 @@ class EventSubmissionController extends Controller
             'description' => $validated['description'],
             'location' => $validated['location'],
             'event_date' => $validated['event_date'],
-            'status' => 'pendente',
+            'user_id' => auth()->id(),
         ]);
 
-        return redirect()->back()->with('success', 'Evento enviado para aprovação com sucesso!');
+        return redirect()->back()
+            ->with('success', 'Evento enviado para aprovação com sucesso!');
     }
 }
