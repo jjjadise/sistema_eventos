@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -35,21 +36,24 @@ class EventController extends Controller
             'banner' => 'nullable|image|max:2048',
         ]);
 
-        $event = new Event();
+        // ⭐ adiciona campos obrigatórios
+        $validated['user_id'] = Auth::id();
+        $validated['status'] = 'pendente';
 
-        $event->title = $validated['title'];
-        $event->description = $validated['description'];
-        $event->location = $validated['location'];
-        $event->event_date = $validated['event_date'];
-        $event->category_id = $validated['category_id'] ?? null;
-
+        // ⭐ upload banner
         if ($request->hasFile('banner')) {
-            $event->banner = $request->file('banner')->store('banners', 'public');
+            $validated['banner'] = $request->file('banner')
+                ->store('banners', 'public');
         }
 
-        $event->save();
+        Event::create($validated);
 
         return redirect()->route('home')
             ->with('success', 'Evento enviado para aprovação!');
+    }
+
+    public function show(Event $event)
+    {
+        return view('events.show', compact('event'));
     }
 }
