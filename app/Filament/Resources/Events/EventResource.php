@@ -8,19 +8,23 @@ use App\Filament\Resources\Events\Pages\ListEvents;
 use App\Filament\Resources\Events\Schemas\EventForm;
 use App\Filament\Resources\Events\Tables\EventsTable;
 use App\Models\Event;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class EventResource extends Resource
 {
     protected static ?string $model = Event::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
     protected static ?string $navigationLabel = 'Eventos';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Gerenciamento';
+
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $modelLabel = 'Evento';
 
@@ -36,6 +40,12 @@ class EventResource extends Resource
     public static function table(Table $table): Table
     {
         return EventsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->latest('event_date');
     }
 
     public static function getRelations(): array

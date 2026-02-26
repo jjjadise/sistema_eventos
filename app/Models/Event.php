@@ -8,15 +8,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Event extends Model
 {
     protected $fillable = [
-        'title',
-        'description',
-        'location',
-        'event_date',
-        'status',
-        'rejection_reason',
-        'user_id',
-        'category_id',
-    ];
+    'title',
+    'description',
+    'location',
+    'event_date',
+    'status',
+    'rejection_reason',
+    'user_id',
+    'category_id',
+    'banner',
+];
+
+protected $casts = [
+    'event_date' => 'datetime',
+];
 
     protected static function booted()
     {
@@ -24,6 +29,7 @@ class Event extends Model
             $event->status = 'pendente';
         });
     }
+
 
     public function category(): BelongsTo
     {
