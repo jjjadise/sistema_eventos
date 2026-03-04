@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Filament\Resources\Categories\Schemas;
+namespace App\Filament\Resources\KnowledgeAreas\Schemas;
 
-use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
 
-
-class CategoryForm
+class KnowledgeAreaForm
 {
     public static function schema(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Nome do Categoria')
+                    ->label('Nome da Área')
                     ->required()
                     ->maxLength(255),
             ]);

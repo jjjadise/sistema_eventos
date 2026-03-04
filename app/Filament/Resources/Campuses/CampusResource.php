@@ -1,29 +1,32 @@
 <?php
 
-namespace App\Filament\Resources\Categories;
 
-use App\Models\Category;
+
+
+namespace App\Filament\Resources\Campuses;
+
+use App\Models\Campus;
 use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema; // Certifique-se de que este é o namespace correto
-use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput; // Corrigido aqui
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 
-class CategoryResource extends Resource
+class CampusResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Campus::class;
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-tag'; // Escolha um ícone apropriado
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-building-office';
 
-    protected static ?string $navigationLabel = 'Categorias';
+    protected static ?string $navigationLabel = 'Campi';
 
-    protected static ?string $modelLabel = 'Categoria';
+    protected static ?string $modelLabel = 'Campus';
 
-    protected static ?string $pluralModelLabel = 'Categorias';
+    protected static ?string $pluralModelLabel = 'Campi';
 
     public static function form(Schema $schema): Schema
     {
@@ -65,9 +68,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => \App\Filament\Resources\Categories\Pages\ListCategories::route('/'),
-            'create' => \App\Filament\Resources\Categories\Pages\CreateCategory::route('/create'),
-            'edit' => \App\Filament\Resources\Categories\Pages\EditCategory::route('/{record}/edit'),
+            'index' => \App\Filament\Resources\Campuses\Pages\ListCampuses::route('/'),
+            'create' => \App\Filament\Resources\Campuses\Pages\CreateCampus::route('/create'),
+            'edit' => \App\Filament\Resources\Campuses\Pages\EditCampus::route('/{record}/edit'),
         ];
     }
 }

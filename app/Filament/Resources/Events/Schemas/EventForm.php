@@ -21,7 +21,7 @@ class EventForm
                     ->image()
                     ->disk('public')
                     ->directory('banners')
-                    ->imageEditor() // permite cortar / ajustar
+                    ->imageEditor()
                     ->imagePreviewHeight('250')
                     ->loadingIndicatorPosition('left')
                     ->panelAspectRatio('2:1')
@@ -56,18 +56,93 @@ class EventForm
                     ->placeholder('Ex: Fortaleza - CE')
                     ->required(),
 
-
                 TextInput::make('address')
-                 ->label('Endereço completo')
-                 ->placeholder('Av. da Universidade, 2853 - Benfica, Fortaleza - CE')
-                 ->helperText('Este endereço será usado para exibir o mapa')
-                 ->maxLength(255),
+                    ->label('Endereço completo')
+                    ->placeholder('Av. da Universidade, 2853 - Benfica, Fortaleza - CE')
+                    ->helperText('Este endereço será usado para exibir o mapa')
+                    ->maxLength(255),
+
+                
+                TextInput::make('contact_email')
+                    ->label('E-mail para contato')
+                    ->email()
+                    ->required()
+                    ->maxLength(255),
+
+                
+
+                    Select::make('campus_id')
+                    ->label('Campus')
+                    ->relationship('campus', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                    Select::make('knowledge_area_id')
+                    ->label('Área de Conhecimento')
+                    ->relationship('knowledgeArea', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                    TextInput::make('event_link')
+                    ->label('Link do Evento')
+                    ->url()
+                    ->required(),
+                    TextInput::make('registration_link')
+                    ->label('Link de Inscrição')
+                    ->url(),
+                    Select::make('is_paid')
+                    ->label('Evento Pago?')
+                    ->options([
+                      1 => 'Sim',
+                      0 => 'Não',
+                  ])
+                    ->required(),
+                    Select::make('has_interpreter')
+                   ->label('Possui Intérprete de Libras?')
+                   ->options([
+                   1 => 'Sim',
+                   0 => 'Não',
+               ])
+                   ->required(),
+                    Select::make('is_accessible')
+                   ->label('Espaço Acessível?')
+                   ->options([
+                   1 => 'Sim',
+                   0 => 'Não',
+             ])
+                    ->required(),
+                    TextInput::make('banner_alt_text')
+                    ->label('Texto Alternativo do Banner')
+                    ->required(),
+                    TextInput::make('responsible_name')
+                    ->label('Nome do Responsável')
+                    ->required(),
+                    TextInput::make('responsible_phone')
+                    ->label('Telefone do Responsável')
+                    ->required(),
+                    TextInput::make('responsible_email')
+                    ->label('Email do Responsável')
+                    ->email()
+                    ->required(),
+
+
+                    Select::make('modality')
+                    ->label('Modalidade')
+                    ->options([
+                    'presencial' => 'Presencial',
+                    'online' => 'Online',
+                    'hibrido' => 'Híbrido',
+                     ])
+                    ->required(),
+
+
+
 
 
                 DateTimePicker::make('event_date')
                     ->label('Data do Evento')
                     ->seconds(false)
-                    ->native(false) // UI mais bonita no Filament
+                    ->native(false)
                     ->displayFormat('d/m/Y H:i')
                     ->required(),
 

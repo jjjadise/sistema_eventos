@@ -3,36 +3,48 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Event extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
-    'title',
-    'description',
-    'location',
-    'event_date',
-    'status',
-    'rejection_reason',
-    'user_id',
-    'category_id',
-    'banner',
-];
+        'title',
+        'description',
+        'event_date',
+        'location',
+        'address',
+        'modality',
+        'event_link',
+        'is_paid',
+        'has_interpreter',
+        'banner',
+        'banner_alt_text',
+        'status',
+        'category_id',
+        'campus_id',
+        'knowledge_area_id',
+        'responsible_name',
+        'responsible_phone',
+        'responsible_email',
+        'is_accessible',
+        'registration_link',
+        
+    ];
 
-protected $casts = [
-    'event_date' => 'datetime',
-];
-
-    protected static function booted()
-    {
-        static::creating(function ($event) {
-            $event->status = 'pendente';
-        });
-    }
-
-
-    public function category(): BelongsTo
+    public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function campus()
+    {
+        return $this->belongsTo(Campus::class);
+    }
+
+    public function knowledgeArea()
+    {
+        return $this->belongsTo(KnowledgeArea::class);
     }
 }

@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Filament\Resources\Categories\Schemas;
+namespace App\Filament\Resources\Campuses\Schemas;
 
-use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Schema;
 
-
-class CategoryForm
+class CampusForm
 {
     public static function schema(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Nome do Categoria')
+                    ->label('Nome do Campus')
                     ->required()
                     ->maxLength(255),
             ]);
