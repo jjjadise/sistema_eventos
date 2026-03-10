@@ -3,86 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $event->title }}</title>
+    <title>{{ $event->title }} - Sistema de Eventos</title>
     @vite('resources/css/app.css')
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-50 text-gray-900">
 
-<div class="max-w-4xl mx-auto px-4 py-10">
+<header class="bg-white border-b">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <div class="font-semibold text-lg">Sistema de Eventos</div>
+        <nav class="flex items-center gap-6 text-sm">
+            <a href="{{ route('home') }}" class="text-gray-600 hover:text-black">Eventos</a>
+            <a href="{{ route('espacos.index') }}" class="text-gray-600 hover:text-black">Espaços</a>
+            <a href="{{ route('events.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+                Divulgar Evento
+            </a>
+        </nav>
+    </div>
+</header>
 
-    <a href="{{ route('home') }}" class="text-sm text-blue-600 hover:underline mb-4 inline-block">
-        ← Voltar
+<main class="max-w-4xl mx-auto px-4 py-10">
+
+    <a href="{{ route('home') }}" class="text-sm text-blue-600 hover:underline mb-6 inline-block">
+        ← Voltar para eventos
     </a>
 
-    <div class="bg-white rounded-xl shadow-lg mt-4 border overflow-hidden">
-
-        {{-- Banner --}}
-        @if ($event->banner)
+    {{-- Banner --}}
+    @if ($event->banner)
+        <div class="w-full h-72 rounded-2xl overflow-hidden shadow mb-8">
             <img src="{{ asset('storage/' . $event->banner) }}"
-                 class="w-full h-48 object-cover">
-        @endif
-
-        <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <div class="col-span-1">
-                <h1 class="text-2xl font-semibold mb-2">{{ $event->title }}</h1>
-                <div class="text-sm text-gray-500 mb-4">
-                    {{ $event->category->name ?? 'Sem categoria' }}
-                </div>
-                <div class="text-lg font-bold text-blue-600 mb-2">
-                    Data do Evento: {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y H:i') }}
-                </div>
-                <div class="text-gray-600 mb-2">
-                    <strong>Local:</strong> {{ $event->location }}
-                </div>
-                <div class="text-gray-600 mb-2">
-                    <strong>Endereço:</strong> {{ $event->address }}
-                </div>
-                <div class="text-gray-600 mb-2">
-                    <strong>Descrição:</strong> {{ $event->description }}
-                </div>
-            </div>
-
-            <div class="col-span-1">
-                <h2 class="text-lg font-semibold mb-2">Informações Adicionais</h2>
-                <div class="text-gray-600 mb-2">
-                    <strong>Evento Pago:</strong> {{ $event->is_paid ? 'Sim' : 'Não' }}
-                </div>
-                <div class="text-gray-600 mb-2">
-                    <strong>Possui Intérprete de Libras:</strong> {{ $event->has_interpreter ? 'Sim' : 'Não' }}
-                </div>
-                <div class="text-gray-600 mb-2">
-                    <strong>Espaço Acessível:</strong> {{ $event->is_accessible ? 'Sim' : 'Não' }}
-                </div>
-                <div class="text-gray-600 mb-2">
-                    <strong>Modalidade:</strong> {{ ucfirst($event->modality) }}
-                </div>
-                <div class="text-gray-600 mb-2">
-                    <strong>Link do Evento:</strong> <a href="{{ $event->event_link }}" class="text-blue-600 hover:underline">{{ $event->event_link }}</a>
-                </div>
-                @if ($event->registration_link)
-                    <div class="text-gray-600 mb-2">
-                        <strong>Link de Inscrição:</strong> <a href="{{ $event->registration_link }}" class="text-blue-600 hover:underline">{{ $event->registration_link }}</a>
-                    </div>
-                @endif
-            </div>
-
+                 alt="{{ $event->banner_alt_text ?? $event->title }}"
+                 class="w-full h-full object-cover">
         </div>
+    @endif
 
-        <div class="mt-6">
+    {{-- Título e categoria --}}
+    <div class="mb-6">
+        @if ($event->category)
+            <span class="bg-blue-100 text-blue-700 text-xs font-medium px-3 py-1 rounded-full">
+                {{ $event->category->name }}
+            </span>
+        @endif
+        <h1 class="text-3xl font-bold text-gray-900 mt-3">{{ $event->title }}</h1>
+    </div>
+
+    {{-- Informações principais --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+        <div class="bg-white rounded-xl border shadow-sm p-4">
+            <p class="text-xs text-gray-400 uppercase mb-1">Data e hora</p>
+            <p class="text-gray-800 font-medium">
+                📅 {{ \Carbon\Carbon::parse($event->event_date)->format('d/m/Y \à\s H:i') }}
+            </p>
+        </div>
+        <div class="bg-white rounded-xl border shadow-sm p-4">
+            <p class="text-xs text-gray-400 uppercase mb-1">Modalidade</p>
+            <p class="text-gray-800 font-medium">
+                🎓 {{ ucfirst($event->modality) }}
+            </p>
+        </div>
+        <div class="bg-white rounded-xl border shadow-sm p-4">
+            <p class="text-xs text-gray-400 uppercase mb-1">Local</p>
+            <p class="text-gray-800 font-medium">📍 {{ $event->location }}</p>
+            @if ($event->address)
+                <p class="text-gray-500 text-sm mt-1">{{ $event->address }}</p>
+            @endif
+        </div>
+        <div class="bg-white rounded-xl border shadow-sm p-4">
+            <p class="text-xs text-gray-400 uppercase mb-1">Ingresso</p>
+            <p class="text-gray-800 font-medium">
+                {{ $event->is_paid ? '💰 Evento pago' : '🎟️ Entrada gratuita' }}
+            </p>
+        </div>
+    </div>
+
+    {{-- Descrição --}}
+    @if ($event->description)
+        <div class="bg-white rounded-2xl border shadow-sm p-6 mb-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-3">Sobre o evento</h2>
+            <p class="text-gray-700 leading-relaxed">{{ $event->description }}</p>
+        </div>
+    @endif
+
+    {{-- Acessibilidade e recursos --}}
+    <div class="bg-white rounded-2xl border shadow-sm p-6 mb-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">Acessibilidade</h2>
+        <div class="flex flex-wrap gap-3">
+            <span class="text-sm px-3 py-1 rounded-full {{ $event->has_interpreter ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
+                {{ $event->has_interpreter ? '✅' : '❌' }} Intérprete de Libras
+            </span>
+            <span class="text-sm px-3 py-1 rounded-full {{ $event->is_accessible ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-400' }}">
+                {{ $event->is_accessible ? '✅' : '❌' }} Espaço acessível
+            </span>
+        </div>
+    </div>
+
+    {{-- Links --}}
+    <div class="flex flex-wrap gap-3 mb-8">
+        @if ($event->event_link)
+            <a href="{{ $event->event_link }}" target="_blank"
+               class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition text-sm font-medium">
+                🔗 Acessar evento
+            </a>
+        @endif
+        @if ($event->registration_link)
+            <a href="{{ $event->registration_link }}" target="_blank"
+               class="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition text-sm font-medium">
+                📝 Inscrever-se
+            </a>
+        @endif
+    </div>
+
+    {{-- Mapa --}}
+    @if ($event->location)
+        <div class="bg-white rounded-2xl border shadow-sm overflow-hidden mb-6">
+            <div class="p-4 border-b">
+                <h2 class="text-lg font-semibold text-gray-800">📍 Localização</h2>
+            </div>
             <iframe
                 width="100%"
-                height="260"
+                height="300"
                 style="border:0"
                 loading="lazy"
                 allowfullscreen
                 referrerpolicy="no-referrer-when-downgrade"
-                src="https://www.google.com/maps?q={{ urlencode($event->location) }}&output=embed">
+                src="https://www.google.com/maps?q={{ urlencode($event->address ?? $event->location) }}&output=embed">
             </iframe>
         </div>
+    @endif
 
-    </div>
-</div>
+    {{-- Responsável --}}
+    @if ($event->responsible_name)
+        <div class="bg-white rounded-2xl border shadow-sm p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-3">Contato do responsável</h2>
+            <p class="text-gray-700 text-sm mb-1">👤 {{ $event->responsible_name }}</p>
+            @if ($event->responsible_email)
+                <p class="text-gray-700 text-sm mb-1">✉️ {{ $event->responsible_email }}</p>
+            @endif
+            @if ($event->responsible_phone)
+                <p class="text-gray-700 text-sm">📞 {{ $event->responsible_phone }}</p>
+            @endif
+        </div>
+    @endif
+
+</main>
 
 </body>
 </html>

@@ -2,115 +2,103 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
-use App\Models\Category;
 use App\Models\Campus;
+use App\Models\Category;
+use App\Models\Espaco;
+use App\Models\Event;
 use App\Models\KnowledgeArea;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\EventSubmittedMail;
 
 class EventController extends Controller
 {
-   
-
-public function index(Request $request)
-{
-    $query = $request->input('search'); // Captura o termo de pesquisa
-    $events = Event::where('status', 'aprovado');
-
-    if ($query) {
-        $events->where(function($q) use ($query) {
-            $q->where('title', 'LIKE', "%{$query}%")
-              ->orWhere('description', 'LIKE', "%{$query}%")
-              ->orWhere('location', 'LIKE', "%{$query}%");
-        });
-    }
-
-    $events = $events->orderBy('event_date')->get(); // Executa a consulta
-
-    return view('home', compact('events'));
-}
-
-
-
-
-    public function create()
+    public function index(Request $request)
     {
-        $categories = Category::orderBy('name')->get();
-        $campuses = Campus::orderBy('name')->get();
-        $knowledgeAreas = KnowledgeArea::orderBy('name')->get();
+        $query = Event::with(['category', 'campus'])
+            ->where('status', 'aprovado')
+            ->orderBy('event_date');
 
-        return view('events.submit', compact('categories', 'campuses', 'knowledgeAreas'));
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|min:3',
-            'description' => 'required|min:5',
-            'event_date' => 'required|date',
-
-            'category_id' => 'required|exists:categories,id',
-            'campus_id' => 'required|exists:campuses,id',
-            'knowledge_area_id' => 'required|exists:knowledge_areas,id',
-
-            'modality' => 'required|in:presencial,online,hibrido',
-
-            // Agora address é opcional
-            'address' => 'nullable|string',
-
-            'location' => 'required|string',
-
-            'event_link' => 'required|url',
-            'registration_link' => 'nullable|url',
-
-            'is_paid' => 'required|boolean',
-            'has_interpreter' => 'required|boolean',
-            'is_accessible' => 'required|boolean',
-
-            'accessibility_notes' => 'nullable|string',
-
-            'banner' => 'required|image|max:2048',
-            'banner_alt_text' => 'required|string|min:3',
-
-            'responsible_name' => 'required|string|min:3',
-            'responsible_phone' => 'required|string|min:8',
-            'responsible_email' => 'required|email',
-        ], [
-            'required' => 'O campo :attribute é obrigatório.',
-            'event_link.url' => 'O link do evento deve ser uma URL válida.',
-            'registration_link.url' => 'O link de inscrição deve ser uma URL válida.',
-            'banner.image' => 'O banner deve ser uma imagem.',
-            'banner.max' => 'O banner deve ter no máximo 2MB.',
-        ]);
-
-        // Garantir boolean correto
-        $validated['is_paid'] = (bool) $validated['is_paid'];
-        $validated['has_interpreter'] = (bool) $validated['has_interpreter'];
-        $validated['is_accessible'] = (bool) $validated['is_accessible'];
-
-        // Upload do banner
-        if ($request->hasFile('banner')) {
-            $validated['banner'] = $request->file('banner')
-                ->store('banners', 'public');
+        if ($request->search) {
+            $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        // Status inicial
-        $validated['status'] = 'pendente';
+        if ($request->category) {
+            $query->where('category_id', $request->category);
+        }
 
-        $event = Event::create($validated);
+        $events         = $query->get();
+        $categories     = Category::orderBy('name')->get();
+        $espacos        = Espaco::latest()->take(6)->get();
 
-        // Enviar e-mail de confirmação
-        Mail::to($event->responsible_email)
-            ->send(new EventSubmittedMail($event));
-
-        return redirect()->route('home')
-            ->with('success', 'Evento enviado para aprovação!');
+        return view('home', compact('events', 'categories', 'espacos'));
     }
 
     public function show(Event $event)
     {
         return view('events.show', compact('event'));
+    }
+
+    public function create()
+    {
+        $categories     = Category::orderBy('name')->get();
+        $campuses       = Campus::orderBy('name')->get();
+        $knowledgeAreas = KnowledgeArea::orderBy('name')->get();
+        return view('events.create', compact('categories', 'campuses', 'knowledgeAreas'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title'              => 'required|string|max:255',
+            'description'        => 'required|string',
+            'event_date'         => 'required',
+            'location'           => 'required|string|max:255',
+            'address'            => 'required|string|max:255',
+            'modality'           => 'required|in:presencial,online,hibrido',
+            'category_id'        => 'required|exists:categories,id',
+            'campus_id'          => 'required|exists:campuses,id',
+            'knowledge_area_id'  => 'required|exists:knowledge_areas,id',
+            'is_paid'            => 'required|boolean',
+            'has_interpreter'    => 'required|boolean',
+            'is_accessible'      => 'required|boolean',
+            'responsible_name'   => 'required|string|max:255',
+            'responsible_email'  => 'required|email',
+            'responsible_phone'  => 'required|string|max:20',
+            'event_link'         => 'nullable|url',
+            'registration_link'  => 'nullable|url',
+            'banner'             => 'nullable|image|max:2048',
+            'banner_alt_text'    => 'nullable|string|max:255',
+        ]);
+
+        $bannerPath = null;
+        if ($request->hasFile('banner')) {
+            $bannerPath = $request->file('banner')->store('banners', 'public');
+        }
+
+        Event::create([
+            'title'             => $request->title,
+            'description'       => $request->description,
+            'event_date'        => Carbon::parse($request->event_date),
+            'location'          => $request->location,
+            'address'           => $request->address,
+            'modality'          => $request->modality,
+            'category_id'       => $request->category_id,
+            'campus_id'         => $request->campus_id,
+            'knowledge_area_id' => $request->knowledge_area_id,
+            'is_paid'           => $request->is_paid,
+            'has_interpreter'   => $request->has_interpreter,
+            'is_accessible'     => $request->is_accessible,
+            'responsible_name'  => $request->responsible_name,
+            'responsible_phone' => $request->responsible_phone,
+            'responsible_email' => $request->responsible_email,
+            'event_link'        => $request->event_link ?? '',
+            'registration_link' => $request->registration_link ?? '',
+            'banner'            => $bannerPath,
+            'banner_alt_text'   => $request->banner_alt_text ?? '',
+            'status'            => 'pendente',
+            'submission_date'   => now(),
+        ]);
+
+        return redirect()->route('home')->with('success', 'Evento enviado para aprovação!');
     }
 }

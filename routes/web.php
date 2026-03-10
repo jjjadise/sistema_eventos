@@ -9,3 +9,4 @@ Route::get('/', [EventController::class, 'index'])->name('home');
 Route::get('/eventos/{event}', [EventController::class, 'show'])->name('events.show');
 Route::get('/divulgar-evento', [EventController::class, 'create'])->name('events.create');
 Route::post('/divulgar-evento', [EventController::class, 'store'])->name('events.store');
+Route::get('/espacos', [App\Http\Controllers\EspacoController::class, 'index'])->name('espacos.index');
