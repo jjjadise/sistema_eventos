@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\Espacos\Pages;
+namespace App\Filament\Resources\Venues\Pages;
 
-use App\Filament\Resources\EspacoResource;
+use App\Filament\Resources\Venues\VenueResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditEspaco extends EditRecord
+class EditVenue extends EditRecord
 {
-    protected static string $resource = EspacoResource::class;
+    protected static string $resource = VenueResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -12,7 +12,7 @@
         <div class="font-semibold text-lg">Sistema de Eventos</div>
         <nav class="flex items-center gap-6 text-sm">
             <a href="{{ route('home') }}" class="text-gray-600 hover:text-black">Eventos</a>
-            <a href="{{ route('espacos.index') }}" class="text-blue-600 font-medium">Espaços</a>
+            <a href="{{ route('venues.index') }}" class="text-blue-600 font-medium">Espaços</a>
             <a href="{{ route('events.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
                 Divulgar Evento
             </a>
@@ -28,59 +28,59 @@
     </div>
 
     <div class="space-y-12">
-        @forelse ($espacos as $espaco)
+        @forelse ($venues as $venue)
             <div class="bg-white rounded-2xl shadow-md overflow-hidden">
 
-                @if ($espaco->imagem_capa)
+                @if ($venue->imagem_capa)
                     <div class="w-full h-72 overflow-hidden">
-                        <img src="{{ asset('storage/' . $espaco->imagem_capa) }}" class="w-full h-full object-cover">
+                        <img src="{{ asset('storage/' . $venue->imagem_capa) }}" class="w-full h-full object-cover">
                     </div>
                 @endif
 
                 <div class="p-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-3">{{ $espaco->titulo }}</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-3">{{ $venue->titulo }}</h2>
 
-                    @if (!empty($espaco->conteudo['descricao']))
+                    @if (!empty($venue->conteudo['descricao']))
                         <div class="text-gray-700 mb-6">
-                            {!! $espaco->conteudo['descricao'] !!}
+                            {!! $venue->conteudo['descricao'] !!}
                         </div>
                     @endif
 
-                    @if (!empty($espaco->conteudo['capacidade_pessoas']) || !empty($espaco->conteudo['recursos']))
+                    @if (!empty($venue->conteudo['capacidade_pessoas']) || !empty($venue->conteudo['recursos']))
                         <div class="border-t pt-4 mb-4">
                             <h3 class="font-semibold text-gray-800 mb-3">👥 Capacidade e Recursos</h3>
-                            @if (!empty($espaco->conteudo['capacidade_pessoas']))
+                            @if (!empty($venue->conteudo['capacidade_pessoas']))
                                 <p class="text-gray-700 text-sm mb-2">
-                                    Capacidade: <strong>{{ $espaco->conteudo['capacidade_pessoas'] }} pessoas</strong>
+                                    Capacidade: <strong>{{ $venue->conteudo['capacidade_pessoas'] }} pessoas</strong>
                                 </p>
                             @endif
-                            @if (!empty($espaco->conteudo['area_m2']))
+                            @if (!empty($venue->conteudo['area_m2']))
                                 <p class="text-gray-700 text-sm mb-2">
-                                    Área: <strong>{{ $espaco->conteudo['area_m2'] }} m²</strong>
+                                    Área: <strong>{{ $venue->conteudo['area_m2'] }} m²</strong>
                                 </p>
                             @endif
-                            @if (!empty($espaco->conteudo['recursos']))
+                            @if (!empty($venue->conteudo['recursos']))
                                 <div class="flex flex-wrap gap-2 mt-2">
-                                    @foreach ($espaco->conteudo['recursos'] as $recurso)
+                                    @foreach ($venue->conteudo['recursos'] as $recurso)
                                         <span class="bg-blue-100 text-blue-700 text-sm px-3 py-1 rounded-full">{{ $recurso }}</span>
                                     @endforeach
                                 </div>
                             @endif
-                            @if (!empty($espaco->conteudo['acessivel']))
+                            @if (!empty($venue->conteudo['acessivel']))
                                 <p class="text-sm text-green-600 mt-2">♿ Acessível para PCD</p>
                             @endif
                         </div>
                     @endif
 
-                    @if (!empty($espaco->conteudo['endereco']))
+                    @if (!empty($venue->conteudo['endereco']))
                         <div class="border-t pt-4 mb-4">
                             <h3 class="font-semibold text-gray-800 mb-2">📍 Localização</h3>
-                            <p class="text-gray-700 text-sm">{{ $espaco->conteudo['endereco'] }}</p>
-                            @if (!empty($espaco->conteudo['cidade']))
-                                <p class="text-gray-500 text-sm">{{ $espaco->conteudo['cidade'] }}</p>
+                            <p class="text-gray-700 text-sm">{{ $venue->conteudo['endereco'] }}</p>
+                            @if (!empty($venue->conteudo['cidade']))
+                                <p class="text-gray-500 text-sm">{{ $venue->conteudo['cidade'] }}</p>
                             @endif
-                            @if (!empty($espaco->conteudo['link_mapa']))
-                                <a href="{{ $espaco->conteudo['link_mapa'] }}" target="_blank"
+                            @if (!empty($venue->conteudo['link_mapa']))
+                                <a href="{{ $venue->conteudo['link_mapa'] }}" target="_blank"
                                    class="inline-block mt-2 text-blue-600 hover:underline text-sm">
                                     Ver no Google Maps →
                                 </a>
@@ -88,11 +88,11 @@
                         </div>
                     @endif
 
-                    @if (!empty($espaco->conteudo['galeria']))
+                    @if (!empty($venue->conteudo['galeria']))
                         <div class="border-t pt-4">
                             <h3 class="font-semibold text-gray-800 mb-3">🖼️ Galeria</h3>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                                @foreach ($espaco->conteudo['galeria'] as $foto)
+                                @foreach ($venue->conteudo['galeria'] as $foto)
                                     <div class="h-40 rounded-xl overflow-hidden">
                                         <img src="{{ asset('storage/' . $foto) }}" class="w-full h-full object-cover">
                                     </div>

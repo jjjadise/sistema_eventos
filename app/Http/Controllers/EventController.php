@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEventRequest;
+use App\Mail\EventApprovedMail;
+use App\Mail\EventRejectedMail;
+use App\Mail\EventSubmittedMail;
 use App\Models\Campus;
 use App\Models\Category;
-use App\Models\Espaco;
+use App\Models\Venue;
 use App\Models\Event;
 use App\Models\KnowledgeArea;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class EventController extends Controller
 {
@@ -26,11 +31,11 @@ class EventController extends Controller
             $query->where('category_id', $request->category);
         }
 
-        $events         = $query->get();
-        $categories     = Category::orderBy('name')->get();
-        $espacos        = Espaco::latest()->take(6)->get();
+        $events     = $query->get();
+        $categories = Category::orderBy('name')->get();
+        $venues    = Venue::latest()->take(6)->get();
 
-        return view('home', compact('events', 'categories', 'espacos'));
+        return view('home', compact('events', 'categories', 'venues'));
     }
 
     public function show(Event $event)
@@ -43,39 +48,18 @@ class EventController extends Controller
         $categories     = Category::orderBy('name')->get();
         $campuses       = Campus::orderBy('name')->get();
         $knowledgeAreas = KnowledgeArea::orderBy('name')->get();
+
         return view('events.create', compact('categories', 'campuses', 'knowledgeAreas'));
     }
 
-    public function store(Request $request)
+    public function store(StoreEventRequest $request)
     {
-        $request->validate([
-            'title'              => 'required|string|max:255',
-            'description'        => 'required|string',
-            'event_date'         => 'required',
-            'location'           => 'required|string|max:255',
-            'address'            => 'required|string|max:255',
-            'modality'           => 'required|in:presencial,online,hibrido',
-            'category_id'        => 'required|exists:categories,id',
-            'campus_id'          => 'required|exists:campuses,id',
-            'knowledge_area_id'  => 'required|exists:knowledge_areas,id',
-            'is_paid'            => 'required|boolean',
-            'has_interpreter'    => 'required|boolean',
-            'is_accessible'      => 'required|boolean',
-            'responsible_name'   => 'required|string|max:255',
-            'responsible_email'  => 'required|email',
-            'responsible_phone'  => 'required|string|max:20',
-            'event_link'         => 'nullable|url',
-            'registration_link'  => 'nullable|url',
-            'banner'             => 'nullable|image|max:2048',
-            'banner_alt_text'    => 'nullable|string|max:255',
-        ]);
-
         $bannerPath = null;
         if ($request->hasFile('banner')) {
             $bannerPath = $request->file('banner')->store('banners', 'public');
         }
 
-        Event::create([
+        $event = Event::create([
             'title'             => $request->title,
             'description'       => $request->description,
             'event_date'        => Carbon::parse($request->event_date),
@@ -99,6 +83,34 @@ class EventController extends Controller
             'submission_date'   => now(),
         ]);
 
+        Mail::to($event->responsible_email)->send(new EventSubmittedMail($event));
+
         return redirect()->route('home')->with('success', 'Evento enviado para aprovação!');
+    }
+
+    public function downloadIcs(Event $event)
+    {
+        $start = Carbon::parse($event->event_date)->format('Ymd\THis');
+        $end   = Carbon::parse($event->event_date)->addHours(2)->format('Ymd\THis');
+        $now   = Carbon::now()->format('Ymd\THis');
+
+        $ics = "BEGIN:VCALENDAR\r\n"
+             . "VERSION:2.0\r\n"
+             . "PRODID:-//Sistema de Eventos//PT\r\n"
+             . "BEGIN:VEVENT\r\n"
+             . "UID:" . $event->id . "@sistema-eventos\r\n"
+             . "DTSTAMP:" . $now . "\r\n"
+             . "DTSTART:" . $start . "\r\n"
+             . "DTEND:" . $end . "\r\n"
+             . "SUMMARY:" . $event->title . "\r\n"
+             . "DESCRIPTION:" . str_replace(["\r\n", "\n", "\r"], "\\n", $event->description) . "\r\n"
+             . "LOCATION:" . ($event->address ?? $event->location) . "\r\n"
+             . "END:VEVENT\r\n"
+             . "END:VCALENDAR\r\n";
+
+        return response($ics, 200, [
+            'Content-Type'        => 'text/calendar; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="evento-' . $event->id . '.ics"',
+        ]);
     }
 }

@@ -1,41 +1,37 @@
 <?php
-
 namespace App\Filament\Resources\Events\Pages;
-
 use App\Filament\Resources\Events\EventResource;
+use App\Mail\EventApprovedMail;
+use App\Mail\EventRejectedMail;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Support\Facades\Mail;
 
 class EditEvent extends EditRecord
 {
     protected static string $resource = EventResource::class;
-
     protected function getHeaderActions(): array
     {
         return [
-
             Action::make('aprovar')
                 ->label('Aprovar')
                 ->color('success')
                 ->icon('heroicon-o-check')
                 ->requiresConfirmation()
                 ->action(function ($record) {
-
                     $record->update([
                         'status' => 'aprovado',
                         'rejection_reason' => null,
                     ]);
-
+                    Mail::to($record->responsible_email)->send(new EventApprovedMail($record));
                     Notification::make()
                         ->title('Evento aprovado com sucesso')
                         ->success()
                         ->send();
                 })
                 ->visible(fn ($record) => $record->status !== 'aprovado'),
-
-
             Action::make('rejeitar')
                 ->label('Rejeitar')
                 ->color('danger')
@@ -47,20 +43,17 @@ class EditEvent extends EditRecord
                         ->rows(3),
                 ])
                 ->action(function ($record, array $data) {
-
                     $record->update([
                         'status' => 'rejeitado',
                         'rejection_reason' => $data['rejection_reason'],
                     ]);
-
+                    Mail::to($record->responsible_email)->send(new EventRejectedMail($record));
                     Notification::make()
                         ->title('Evento rejeitado')
                         ->warning()
                         ->send();
                 })
                 ->visible(fn ($record) => $record->status !== 'rejeitado'),
-
-
             DeleteAction::make()
                 ->label('Excluir'),
         ];

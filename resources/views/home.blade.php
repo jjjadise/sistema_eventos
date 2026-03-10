@@ -17,10 +17,10 @@
 {{-- Header --}}
 <header class="bg-white border-b sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <div class="font-bold text-lg text-blue-600">Sistema de Eventos</div>
+        <div class="font-bold text-lg text-blue-600">Eventos Teste</div>
         <nav class="flex items-center gap-6 text-sm">
             <a href="{{ route('home') }}" class="text-blue-600 font-medium">Eventos</a>
-            <a href="{{ route('espacos.index') }}" class="text-gray-500 hover:text-gray-900 transition">Espaços</a>
+            <a href="{{ route('venues.index') }}" class="text-gray-500 hover:text-gray-900 transition">Espaços</a>
             <a href="{{ route('events.create') }}"
                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium">
                 + Divulgar Evento
@@ -128,19 +128,19 @@
             <h2 class="text-xl font-semibold text-gray-900">Espaços da Universidade</h2>
             <p class="text-sm text-gray-400 mt-0.5">Conheça os locais disponíveis para eventos</p>
         </div>
-        <a href="{{ route('espacos.index') }}" class="text-sm text-blue-600 hover:underline">
+        <a href="{{ route('venues.index') }}" class="text-sm text-blue-600 hover:underline">
             Ver todos →
         </a>
     </div>
 
     <div class="overflow-x-auto scroll-events pb-4 -mx-4 px-4">
         <div class="flex gap-4" style="width: max-content">
-            @forelse ($espacos as $espaco)
-                <a href="{{ route('espacos.index') }}"
+            @forelse ($venues as $venue)
+                <a href="{{ route('venues.index') }}"
                    class="card-event bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex-shrink-0 w-56">
                     <div class="h-32 overflow-hidden">
-                        @if ($espaco->imagem_capa)
-                            <img src="{{ asset('storage/' . $espaco->imagem_capa) }}"
+                        @if ($venue->imagem_capa)
+                            <img src="{{ asset('storage/' . $venue->imagem_capa) }}"
                                  class="card-img w-full h-full object-cover transition-transform duration-500">
                         @else
                             <div class="w-full h-full bg-blue-50 flex items-center justify-center text-blue-200 text-3xl">
@@ -149,12 +149,12 @@
                         @endif
                     </div>
                     <div class="p-3">
-                        <div class="font-semibold text-gray-900 text-sm truncate">{{ $espaco->titulo }}</div>
-                        @if (!empty($espaco->conteudo['capacidade_pessoas']))
-                            <div class="text-xs text-gray-400 mt-1">👥 {{ $espaco->conteudo['capacidade_pessoas'] }} pessoas</div>
+                        <div class="font-semibold text-gray-900 text-sm truncate">{{ $venue->titulo }}</div>
+                        @if (!empty($venue->conteudo['capacidade_pessoas']))
+                            <div class="text-xs text-gray-400 mt-1">👥 {{ $venue->conteudo['capacidade_pessoas'] }} pessoas</div>
                         @endif
-                        @if (!empty($espaco->conteudo['endereco']))
-                            <div class="text-xs text-gray-400 mt-0.5 truncate">📍 {{ $espaco->conteudo['endereco'] }}</div>
+                        @if (!empty($venue->conteudo['endereco']))
+                            <div class="text-xs text-gray-400 mt-0.5 truncate">📍 {{ $venue->conteudo['endereco'] }}</div>
                         @endif
                     </div>
                 </a>

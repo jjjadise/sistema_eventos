@@ -112,6 +112,15 @@
         @endif
     </div>
 
+
+    {{-- Adicionar à agenda --}}
+    <div class="mb-8">
+        <a href="{{ route('events.ics', $event) }}"
+           class="inline-flex items-center gap-2 bg-gray-800 text-white px-5 py-2 rounded-lg hover:bg-gray-900 transition text-sm font-medium">
+            📅 Adicionar à agenda (.ics)
+        </a>
+    </div>
+
     {{-- Mapa --}}
     @if ($event->location)
         <div class="bg-white rounded-2xl border shadow-sm overflow-hidden mb-6">

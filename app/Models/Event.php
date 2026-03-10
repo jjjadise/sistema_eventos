@@ -30,7 +30,8 @@ class Event extends Model
         'responsible_email',
         'is_accessible',
         'registration_link',
-        'submission_date' ,
+        'submission_date',
+        'rejection_reason',
         
     ];
 

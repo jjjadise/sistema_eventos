@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Espaco extends Model
+class Venue extends Model
 {
+    use HasFactory;
+
+    protected $table = 'espacos';
+
     protected $fillable = [
         'titulo',
         'slug',

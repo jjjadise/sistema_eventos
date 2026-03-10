@@ -1,12 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
-
-
+use App\Http\Controllers\VenueController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [EventController::class, 'index'])->name('home');
-Route::get('/eventos/{event}', [EventController::class, 'show'])->name('events.show');
-Route::get('/divulgar-evento', [EventController::class, 'create'])->name('events.create');
-Route::post('/divulgar-evento', [EventController::class, 'store'])->name('events.store');
-Route::get('/espacos', [App\Http\Controllers\EspacoController::class, 'index'])->name('espacos.index');
+Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
+Route::get('/events/{event}/ics', [EventController::class, 'downloadIcs'])->name('events.ics');
+Route::get('/venues', [VenueController::class, 'index'])->name('venues.index');
+
+Route::get('/submit-event', [EventController::class, 'create'])->name('events.create');
+Route::post('/submit-event', [EventController::class, 'store'])
+    ->middleware('throttle:3,1')
+    ->name('events.store');
