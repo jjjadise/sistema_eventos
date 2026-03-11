@@ -21,7 +21,9 @@ class EventController extends Controller
     {
         $query = Event::with(['category', 'campus'])
             ->where('status', 'aprovado')
-            ->orderBy('event_date');
+            ->where('event_date', '>=', now())
+            ->orderBy('event_date')
+            ->take(20);
 
         if ($request->search) {
             $query->where('title', 'like', '%' . $request->search . '%');
@@ -36,6 +38,39 @@ class EventController extends Controller
         $venues    = Venue::latest()->take(6)->get();
 
         return view('home', compact('events', 'categories', 'venues'));
+    }
+
+    public function all(Request $request)
+    {
+        $query = Event::with(['category', 'campus'])
+            ->where('status', 'aprovado')
+            ->orderBy('event_date');
+
+        if ($request->search) {
+            $query->where('title', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->category) {
+            $query->where('category_id', $request->category);
+        }
+
+        if ($request->modality) {
+            $query->where('modality', $request->modality);
+        }
+
+        if ($request->campus) {
+            $query->where('campus_id', $request->campus);
+        }
+
+        if ($request->date) {
+            $query->whereDate('event_date', $request->date);
+        }
+
+        $events         = $query->paginate(12)->withQueryString();
+        $categories     = Category::orderBy('name')->get();
+        $campuses       = Campus::orderBy('name')->get();
+
+        return view('events.index', compact('events', 'categories', 'campuses'));
     }
 
     public function show(Event $event)

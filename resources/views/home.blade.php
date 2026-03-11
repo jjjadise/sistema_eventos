@@ -79,6 +79,9 @@
             <h2 class="text-xl font-semibold text-gray-900">Próximos eventos</h2>
             <p class="text-sm text-gray-400 mt-0.5">Role para ver mais →</p>
         </div>
+        <a href="{{ route('events.index') }}" class="text-sm text-blue-600 hover:underline font-medium">
+            Ver todos →
+        </a>
     </div>
 
     <div class="overflow-x-auto scroll-events pb-4 -mx-4 px-4">
@@ -86,7 +89,12 @@
             @forelse ($events as $event)
                 <a href="{{ route('events.show', $event) }}"
                    class="card-event bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex-shrink-0 w-64">
-                    <div class="h-36 overflow-hidden">
+                    <div class="h-36 overflow-hidden relative">
+                        @if(\Carbon\Carbon::parse($event->event_date)->isPast())
+                            <div class="absolute top-2 left-2 z-10 bg-gray-800 bg-opacity-80 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                                ⏰ Encerrado
+                            </div>
+                        @endif
                         @if ($event->banner)
                             <img src="{{ asset('storage/' . $event->banner) }}"
                                  class="card-img w-full h-full object-cover transition-transform duration-500">

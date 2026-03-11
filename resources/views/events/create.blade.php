@@ -13,7 +13,7 @@
         <div class="font-bold text-lg text-blue-600">Sistema de Eventos</div>
         <nav class="flex items-center gap-6 text-sm">
             <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-900 transition">Eventos</a>
-            <a href="{{ route('espacos.index') }}" class="text-gray-500 hover:text-gray-900 transition">Espaços</a>
+            <a href="{{ route('venues.index') }}" class="text-gray-500 hover:text-gray-900 transition">Espaços</a>
             <a href="{{ route('events.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium">
                 + Divulgar Evento
             </a>

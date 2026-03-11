@@ -9,6 +9,8 @@ Route::get('/events/{event}', [EventController::class, 'show'])->name('events.sh
 Route::get('/events/{event}/ics', [EventController::class, 'downloadIcs'])->name('events.ics');
 Route::get('/venues', [VenueController::class, 'index'])->name('venues.index');
 
+Route::get('/events', [EventController::class, 'all'])->name('events.index');
+
 Route::get('/submit-event', [EventController::class, 'create'])->name('events.create');
 Route::post('/submit-event', [EventController::class, 'store'])
     ->middleware('throttle:3,1')

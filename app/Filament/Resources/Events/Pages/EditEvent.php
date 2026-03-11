@@ -47,7 +47,7 @@ class EditEvent extends EditRecord
                         'status' => 'rejeitado',
                         'rejection_reason' => $data['rejection_reason'],
                     ]);
-                    Mail::to($record->responsible_email)->send(new EventRejectedMail($record));
+                    Mail::to($record->responsible_email)->send(new EventRejectedMail($record, $data['rejection_reason']));
                     Notification::make()
                         ->title('Evento rejeitado')
                         ->warning()
