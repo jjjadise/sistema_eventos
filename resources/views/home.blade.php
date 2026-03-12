@@ -29,11 +29,37 @@
     </div>
 </header>
 
+
+
+
+
+
+
+
 @if (session('success'))
-    <div class="bg-green-50 border-l-4 border-green-500 text-green-800 px-6 py-3 text-sm">
-        ✅ Recebemos sua solicitação! Você receberá um retorno em breve.
+<div id="toast-success" class="fixed top-6 right-6 z-50 flex items-start gap-4 bg-white border border-green-200 shadow-xl rounded-2xl px-6 py-4 max-w-sm" style="animation: slideIn 0.4s ease;">
+    <div class="flex-shrink-0 bg-green-100 text-green-600 rounded-full w-10 h-10 flex items-center justify-center text-xl">✅</div>
+    <div>
+        <p class="font-semibold text-gray-900 text-sm">Solicitação recebida!</p>
+        <p class="text-gray-500 text-xs mt-0.5">Analisaremos seu evento em breve e você receberá um retorno por e-mail.</p>
     </div>
+    <button onclick="document.getElementById('toast-success').remove()" class="text-gray-300 hover:text-gray-500 text-lg ml-2">×</button>
+</div>
+<style>@keyframes slideIn { from { opacity:0; transform:translateX(60px); } to { opacity:1; transform:translateX(0); } }</style>
+<script>
+setTimeout(() => {
+    const t = document.getElementById('toast-success');
+    if (t) { t.style.transition='all 0.5s'; t.style.opacity='0'; t.style.transform='translateX(60px)'; setTimeout(()=>t.remove(),500); }
+}, 5000);
+</script>
 @endif
+
+
+
+
+
+
+
 
 {{-- Hero --}}
 <section class="bg-gradient-to-br from-blue-600 to-blue-400 text-white py-16">
@@ -130,49 +156,6 @@
         </div>
     </div>
 
-    {{-- Seção Espaços --}}
-    <div class="mt-14 mb-2 flex items-center justify-between">
-        <div>
-            <h2 class="text-xl font-semibold text-gray-900">Espaços da Universidade</h2>
-            <p class="text-sm text-gray-400 mt-0.5">Conheça os locais disponíveis para eventos</p>
-        </div>
-        <a href="{{ route('venues.index') }}" class="text-sm text-blue-600 hover:underline">
-            Ver todos →
-        </a>
-    </div>
-
-    <div class="overflow-x-auto scroll-events pb-4 -mx-4 px-4">
-        <div class="flex gap-4" style="width: max-content">
-            @forelse ($venues as $venue)
-                <a href="{{ route('venues.index') }}"
-                   class="card-event bg-white rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex-shrink-0 w-56">
-                    <div class="h-32 overflow-hidden">
-                        @if ($venue->imagem_capa)
-                            <img src="{{ asset('storage/' . $venue->imagem_capa) }}"
-                                 class="card-img w-full h-full object-cover transition-transform duration-500">
-                        @else
-                            <div class="w-full h-full bg-blue-50 flex items-center justify-center text-blue-200 text-3xl">
-                                🏛️
-                            </div>
-                        @endif
-                    </div>
-                    <div class="p-3">
-                        <div class="font-semibold text-gray-900 text-sm truncate">{{ $venue->titulo }}</div>
-                        @if (!empty($venue->conteudo['capacidade_pessoas']))
-                            <div class="text-xs text-gray-400 mt-1">👥 {{ $venue->conteudo['capacidade_pessoas'] }} pessoas</div>
-                        @endif
-                        @if (!empty($venue->conteudo['endereco']))
-                            <div class="text-xs text-gray-400 mt-0.5 truncate">📍 {{ $venue->conteudo['endereco'] }}</div>
-                        @endif
-                    </div>
-                </a>
-            @empty
-                <p class="text-gray-400 text-sm py-4">Nenhum espaço cadastrado ainda.</p>
-            @endforelse
-        </div>
-    </div>
-
-    {{-- Tutorial --}}
     <div class="mt-14 bg-white rounded-2xl border shadow-sm p-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div>
             <span class="text-xs font-semibold text-blue-600 uppercase tracking-wide">Como funciona</span>
@@ -203,6 +186,18 @@
         </div>
     </div>
 
+
+    {{-- Banner Espaços --}}
+    <div class="mt-14">
+        <a href="{{ route('venues.index') }}"
+           class="flex items-center justify-between bg-blue-600 hover:bg-blue-700 transition rounded-2xl px-8 py-6 group">
+            <div>
+                <h2 class="text-lg font-bold text-white">🏛️ Conheça os espaços da Universidade</h2>
+                <p class="text-blue-100 text-sm mt-1">Veja os locais disponíveis, capacidade e recursos para o seu evento</p>
+            </div>
+            <span class="text-white text-2xl group-hover:translate-x-1 transition-transform">→</span>
+        </a>
+    </div>
 </main>
 
 <footer class="mt-16 border-t bg-white py-6 text-center text-sm text-gray-400">

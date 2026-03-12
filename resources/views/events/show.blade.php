@@ -28,13 +28,33 @@
     </a>
 
     {{-- Banner --}}
-    @if ($event->banner)
-        <div class="w-full h-72 rounded-2xl overflow-hidden shadow mb-8">
-            <img src="{{ asset('storage/' . $event->banner) }}"
-                 alt="{{ $event->banner_alt_text ?? $event->title }}"
-                 class="w-full h-full object-cover">
-        </div>
-    @endif
+
+
+
+
+
+   @if ($event->banner)
+    <div class="mb-8">
+        <img src="{{ asset('storage/' . $event->banner) }}"
+             alt="{{ $event->banner_alt_text ?? $event->title }}"
+             class="w-full rounded-2xl shadow object-contain max-h-96 cursor-zoom-in"
+             onclick="document.getElementById('modal-banner').classList.remove('hidden')">
+    </div>
+
+    {{-- Modal --}}
+    <div id="modal-banner"
+         class="hidden fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center p-4"
+         onclick="this.classList.add('hidden')">
+        <img src="{{ asset('storage/' . $event->banner) }}"
+             alt="{{ $event->banner_alt_text ?? $event->title }}"
+             class="max-w-full max-h-full rounded-2xl shadow-2xl object-contain">
+            <p class="absolute bottom-6 text-white text-xs opacity-60">Clique em qualquer lugar para fechar</p>
+    </div>
+@endif
+
+
+
+
 
     {{-- Título e categoria --}}
     <div class="mb-6">

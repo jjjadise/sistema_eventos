@@ -27,6 +27,47 @@
         <p class="text-sm text-gray-500 mt-1">Conheça os espaços disponíveis para eventos</p>
     </div>
 
+    <form method="GET" action="{{ route('venues.index') }}" class="bg-white rounded-2xl border shadow-sm p-4 mb-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">Buscar</label>
+                <input type="text" name="search" value="{{ request('search') }}"
+                       placeholder="Nome do espaço..."
+                       class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">Capacidade mínima</label>
+                <input type="number" name="capacidade" value="{{ request('capacidade') }}"
+                       placeholder="Ex: 50"
+                       class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-gray-600 mb-1">Recurso</label>
+                <select name="recurso" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Todos</option>
+                    @foreach ($recursos as $r)
+                        <option value="{{ $r }}" {{ request('recurso') == $r ? 'selected' : '' }}>{{ $r }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="flex flex-col justify-end">
+                <label class="flex items-center gap-2 text-sm text-gray-700 mb-2">
+                    <input type="checkbox" name="acessivel" value="1" {{ request('acessivel') ? 'checked' : '' }}
+                           class="rounded border-gray-300 text-blue-600">
+                    ♿ Apenas acessíveis
+                </label>
+                <div class="flex gap-2">
+                    <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition">
+                        Filtrar
+                    </button>
+                    <a href="{{ route('venues.index') }}" class="flex-1 text-center bg-gray-100 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition">
+                        Limpar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+
     <div class="space-y-12">
         @forelse ($venues as $venue)
             <div class="bg-white rounded-2xl shadow-md overflow-hidden">
