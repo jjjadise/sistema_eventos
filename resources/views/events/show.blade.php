@@ -139,19 +139,7 @@
         </div>
     @endif
 
-    {{-- Responsável --}}
-    @if ($event->responsible_name)
-        <div class="bg-white rounded-2xl border shadow-sm p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-3">Contato do responsável</h2>
-            <p class="text-gray-700 text-sm mb-1">👤 {{ $event->responsible_name }}</p>
-            @if ($event->responsible_email)
-                <p class="text-gray-700 text-sm mb-1">✉️ {{ $event->responsible_email }}</p>
-            @endif
-            @if ($event->responsible_phone)
-                <p class="text-gray-700 text-sm">📞 {{ $event->responsible_phone }}</p>
-            @endif
-        </div>
-    @endif
+
 
 </main>
 

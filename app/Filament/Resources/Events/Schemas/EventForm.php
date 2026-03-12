@@ -20,7 +20,6 @@ class EventForm
                     ->label('Banner do Evento')
                     ->image()
                     ->disk('public')
-                    ->directory('banners')
                     ->imageEditor()
                     ->imagePreviewHeight('250')
                     ->loadingIndicatorPosition('left')
@@ -63,11 +62,7 @@ class EventForm
                     ->maxLength(255),
 
                 
-                TextInput::make('contact_email')
-                    ->label('E-mail para contato')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
+                
 
                 
 

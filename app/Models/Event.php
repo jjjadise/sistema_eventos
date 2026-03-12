@@ -11,6 +11,7 @@ class Event extends Model
 
     protected $fillable = [
         'title',
+        'slug',
         'description',
         'event_date',
         'location',
@@ -34,6 +35,11 @@ class Event extends Model
         'rejection_reason',
         
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function category()
     {

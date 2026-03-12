@@ -12,6 +12,7 @@ use App\Models\Venue;
 use App\Models\Event;
 use App\Models\KnowledgeArea;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -96,6 +97,7 @@ class EventController extends Controller
 
         $event = Event::create([
             'title'             => $request->title,
+            'slug'              => Str::slug($request->title) . '-' . uniqid(),
             'description'       => $request->description,
             'event_date'        => Carbon::parse($request->event_date),
             'location'          => $request->location,
