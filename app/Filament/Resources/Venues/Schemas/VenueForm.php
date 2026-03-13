@@ -12,6 +12,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Select;
 
 class VenueForm
 {
@@ -34,8 +35,23 @@ class VenueForm
                         ->unique(ignoreRecord: true)
                         ->live(onBlur: true)
                         ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
-                    RichEditor::make('conteudo.descricao')
-                        ->label('Descrição'),
+                       Select::make('conteudo.tipo')
+                       ->label('Tipo de Espaço')
+                       ->options([
+                       'auditorio'          => 'Auditório',
+                       'sala_aula'          => 'Sala de Aula',
+                       'sala_videoconf'     => 'Sala de Videoconferência',
+                       'poliesportivo'      => 'Espaço Poliesportivo',
+                       'laboratorio'        => 'Laboratório',
+                       'biblioteca'         => 'Biblioteca',
+                       'espaco_aberto'      => 'Espaço Aberto',
+                       'outro'              => 'Outro',
+             ])
+             ->required(),
+              RichEditor::make('conteudo.descricao')
+              ->label('Descrição'),
+
+
                 ]),
 
                 Tab::make('🖼️ Galeria')->schema([
