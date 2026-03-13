@@ -18,7 +18,7 @@ class StoreEventRequest extends FormRequest
             'description'        => 'required|string',
             'event_date'         => 'required',
             'location'           => 'required|string|max:255',
-            'address'            => 'required|string|max:255',
+            'address' => 'required_unless:modality,online|nullable|string|max:255',
             'modality'           => 'required|in:presencial,online,hibrido',
             'category_id'        => 'required|exists:categories,id',
             'campus_id'          => 'required|exists:campuses,id',

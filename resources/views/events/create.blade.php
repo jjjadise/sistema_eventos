@@ -101,8 +101,11 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Modalidade *</label>
-                    <select name="modality" required
+                    
+                <label class="block text-sm font-medium text-gray-700 mb-1">Modalidade *</label>
+                    
+              <select name="modality" required onchange="toggleAddress(this.value)"
+
                             class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="">Selecione</option>
                         <option value="presencial" {{ old('modality') == 'presencial' ? 'selected' : '' }}>Presencial</option>
@@ -164,9 +167,9 @@
                 </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Endereço completo *</label>
-                <input type="text" name="address" value="{{ old('address') }}" required
+           <div id="field-address" style="{{ old('modality') == 'online' ? 'display:none' : '' }}">
+    <label class="block text-sm font-medium text-gray-700 mb-1">Endereço completo *</label>
+    <input type="text" name="address" id="input-address" value="{{ old('address') }}"
                        placeholder="Ex: Av. da Universidade, 2853 - Benfica, Fortaleza - CE"
                        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
             </div>
@@ -262,6 +265,20 @@
 <footer class="mt-16 border-t bg-white py-6 text-center text-sm text-gray-400">
     Sistema de Eventos © {{ date('Y') }}
 </footer>
+
+<script>
+function toggleAddress(modality) {
+    const field = document.getElementById('field-address');
+    const input = document.getElementById('input-address');
+    if (modality === 'online') {
+        field.style.display = 'none';
+        input.removeAttribute('required');
+    } else {
+        field.style.display = 'block';
+        input.setAttribute('required', 'required');
+    }
+}
+</script>
 
 </body>
 </html>

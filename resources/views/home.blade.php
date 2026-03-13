@@ -187,17 +187,32 @@ setTimeout(() => {
     </div>
 
 
-    {{-- Banner Espaços --}}
-    <div class="mt-14">
-        <a href="{{ route('venues.index') }}"
-           class="flex items-center justify-between bg-blue-600 hover:bg-blue-700 transition rounded-2xl px-8 py-6 group">
-            <div>
-                <h2 class="text-lg font-bold text-white">🏛️ Conheça os espaços da Universidade</h2>
-                <p class="text-blue-100 text-sm mt-1">Veja os locais disponíveis, capacidade e recursos para o seu evento</p>
-            </div>
-            <span class="text-white text-2xl group-hover:translate-x-1 transition-transform">→</span>
-        </a>
-    </div>
+
+
+
+   
+   {{-- Banner Espaços --}}
+<div class="mt-14">
+    <a href="{{ route('venues.index') }}"
+       class="relative flex items-center justify-between bg-gray-900 hover:bg-gray-800 transition rounded-2xl px-10 py-10 overflow-hidden group">
+        {{-- Texto --}}
+        <div class="z-10 max-w-lg">
+            <span class="text-xs font-semibold text-blue-400 uppercase tracking-widest">Espaços da Universidade</span>
+            <h2 class="text-2xl font-bold text-white mt-2 mb-3">Encontre o espaço ideal para o seu evento</h2>
+            <p class="text-gray-400 text-sm mb-6">Conheça os locais disponíveis, capacidade, recursos e acessibilidade de cada espaço da universidade.</p>
+            <span class="inline-flex items-center gap-2 bg-blue-600 group-hover:bg-blue-500 transition text-white text-sm font-medium px-5 py-2.5 rounded-lg">
+                Ver espaços →
+            </span>
+        </div>
+        {{-- Ilustração --}}
+        <div class="absolute right-0 bottom-0 h-full flex items-end justify-end pointer-events-none">
+            <img src="{{ asset('images/reitoria_vetor.png') }}"
+                 alt="Ilustração da Reitoria"
+                 class="h-64 object-contain">
+        </div>
+    </a>
+</div>
+
 </main>
 
 <footer class="mt-16 border-t bg-white py-6 text-center text-sm text-gray-400">
